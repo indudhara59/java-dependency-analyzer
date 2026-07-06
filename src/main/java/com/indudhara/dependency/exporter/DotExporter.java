@@ -32,6 +32,8 @@ public class DotExporter {
                     .append(edge.getType().getLabel())
                     .append(": ")
                     .append(escape(edge.getReason()))
+                    .append("\\n")
+                    .append(escape(edge.getLocation()))
                     .append("\"];\n");
         }
 

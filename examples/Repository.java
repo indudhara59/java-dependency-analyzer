@@ -1,8 +1,10 @@
 package examples;
 
+import java.util.Optional;
+
 public class Repository {
-    public String findById(String id) {
-        return "record-" + id;
+    public Optional<String> findById(String id) {
+        return Optional.of("record-" + id);
     }
 
     public void save(String value) {

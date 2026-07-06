@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.indudhara.dependency.model.DependencyEdge.EdgeType;
+import com.indudhara.dependency.model.DependencyEdge.EdgeKind;
 import com.indudhara.dependency.model.DependencyNode.NodeType;
 
 public class DependencyGraph {
@@ -19,6 +20,10 @@ public class DependencyGraph {
     }
 
     public void addEdge(String source, String target, EdgeType type, String reason) {
+        addEdge(source, target, type, EdgeKind.valueOf(reason.toUpperCase().replace(' ', '_')), "unknown");
+    }
+
+    public void addEdge(String source, String target, EdgeType type, EdgeKind kind, String location) {
         if (source == null || target == null || source.isBlank() || target.isBlank()) {
             return;
         }
@@ -28,7 +33,7 @@ public class DependencyGraph {
         NodeType nodeType = type == EdgeType.CLASS ? NodeType.CLASS : NodeType.METHOD;
         addNode(source, nodeType);
         addNode(target, nodeType);
-        edges.add(new DependencyEdge(source, target, type, reason));
+        edges.add(new DependencyEdge(source, target, type, kind, location));
     }
 
     public Set<DependencyNode> getNodes() {
@@ -42,7 +47,8 @@ public class DependencyGraph {
                 .sorted(Comparator.comparing(DependencyEdge::getType)
                         .thenComparing(DependencyEdge::getSource)
                         .thenComparing(DependencyEdge::getTarget)
-                        .thenComparing(DependencyEdge::getReason))
+                        .thenComparing(DependencyEdge::getKind)
+                        .thenComparing(DependencyEdge::getLocation))
                 .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 }
